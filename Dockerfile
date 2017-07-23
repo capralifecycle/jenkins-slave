@@ -9,9 +9,11 @@
 FROM docker:17.03-dind
 
 RUN apk add -Uuv \
+      jq \
       py2-pip \
       supervisor \
-    && pip install awscli
+    && pip install awscli \
+    && addgroup docker
 
 COPY container/* /
 
