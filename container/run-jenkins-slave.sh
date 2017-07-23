@@ -15,32 +15,28 @@ for x in $(seq 1 10); do
   sleep 1
 done
 
-for varname in JENKINS_MASTER_USERNAME JENKINS_MASTER_PASSWORD; do
-  eval vartest=\$$varname
-  if [ -z "$vartest" ]; then
-      echo "Missing $varname environment variable"
-      exit 1
-  fi
-done
-
-MASTER=http://jenkins-internal.capra.tv
-
-# TODO: provide this in a more safe way
-USER=$JENKINS_MASTER_USERNAME
-PASS=$JENKINS_MASTER_PASSWORD
-
-# Log in to ECR using task role that gives permission
+# Log in to AWS using task role that gives permission
 eval $(aws ecr get-login --no-include-email --region eu-central-1)
+
+# Get Jenkins credentials from parameters store
+USER=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-slave/username | jq -r .Parameters[0].Value)
+PASS=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-slave/password --with-decryption | jq -r .Parameters[0].Value)
+
+# NOTE: We use MESOS_TASK_ID because the swarm client accepts it to use as a
+# hash appended to the name. The default is to used the IP-adress which conflicts
+# because we are running Docker-in-Docker.
+# See https://github.com/jenkinsci/swarm-plugin/blob/1c7c42d88c4db78771020e0db18ea644b2286570/client/src/main/java/hudson/plugins/swarm/SwarmClient.java#L56
 
 # Run the slave
 # TODO: group as docker socket
-# TODO: access to download repo?
-image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave
+image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave:20170723-1949
+docker pull $image
 docker run \
+  -e MESOS_TASK_ID="$(hostname)" \
   -v /var/run/docker.sock:/var/run/docker.sock \
   $image \
     -disableSslVerification \
-    -master "$MASTER" \
+    -master "http://jenkins-internal.capra.tv" \
     -labels "docker" \
     -username "$USER" \
     -password "$PASS" \
