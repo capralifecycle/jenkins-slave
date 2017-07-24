@@ -28,7 +28,6 @@ PASS=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-
 # See https://github.com/jenkinsci/swarm-plugin/blob/1c7c42d88c4db78771020e0db18ea644b2286570/client/src/main/java/hudson/plugins/swarm/SwarmClient.java#L56
 
 # Run the slave
-# TODO: group as docker socket
 image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave:20170723-1949
 docker pull $image
 docker run \
