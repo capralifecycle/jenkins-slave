@@ -32,14 +32,20 @@ dockerNode {
   }
 
   if (env.BRANCH_NAME == 'master') {
-    stage('Push Docker image') {
-      def tagName = sh([
-        returnStdout: true,
-        script: 'date +%Y%m%d-%H%M'
-      ]).trim() + '-' + env.BUILD_NUMBER
+    def tagName = sh([
+      returnStdout: true,
+      script: 'date +%Y%m%d-%H%M'
+    ]).trim() + '-' + env.BUILD_NUMBER
 
+    stage('Push Docker image') {
       img.push(tagName)
       img.push('latest')
+    }
+
+    // TODO: Deploy new slaves while we run on one? Does it even work? Let's try!
+    stage('Deploy to ECS') {
+      def image = "923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave-wrapper:$tagName"
+      ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave -i $image")
     }
   }
 }
