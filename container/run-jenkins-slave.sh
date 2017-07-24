@@ -36,6 +36,7 @@ docker pull $image
 docker run \
   -e MESOS_TASK_ID="$(hostname)" \
   -e JAVA_OPTS="$JAVA_OPTS" \
+  -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI="$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" \
   -v /var/run/docker.sock:/var/run/docker.sock \
   $image \
     -disableSslVerification \
