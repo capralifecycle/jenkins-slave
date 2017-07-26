@@ -4,9 +4,12 @@
 # (However we don't pass any arguments here.)
 set -e
 
+# Use overlay2 file system as it should perform better than vfs that
+# is the default of dind
+
 set -- dockerd \
   --host=unix:///var/run/docker.sock \
   --host=tcp://0.0.0.0:2375 \
-  --storage-driver=vfs
+  --storage-driver=overlay2
 
 exec "$@"
