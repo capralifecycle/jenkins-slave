@@ -27,8 +27,12 @@ dockerNode {
 
   def img
 
+  stage('Pull latest built image for possible cache') {
+    docker.image('jenkins2/slave-wrapper:latest').pull()
+  }
+
   stage('Build Docker image') {
-    img = docker.build('jenkins2/slave-wrapper', '--pull .')
+    img = docker.build('jenkins2/slave-wrapper', '--pull --cache-from jenkins2/slave-wrapper:latest .')
   }
 
   stage('Test image to verify Docker-in-Docker works') {
