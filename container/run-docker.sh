@@ -10,9 +10,10 @@ set -e
 #
 #   modprobe overlay
 
+# TODO: Set back to overlay2 instead of vfs
 set -- dockerd \
   --host=unix:///var/run/docker.sock \
   --host=tcp://0.0.0.0:2375 \
-  --storage-driver=overlay2
+  --storage-driver=vfs
 
 exec "$@"
