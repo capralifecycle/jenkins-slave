@@ -5,7 +5,10 @@
 set -e
 
 # Use overlay2 file system as it should perform better than vfs that
-# is the default of dind
+# is the default of dind. On AWS using ECS optimized AMI we need to
+# load the overlay module on the EC2 instance first for this to work:
+#
+#   modprobe overlay
 
 set -- dockerd \
   --host=unix:///var/run/docker.sock \
