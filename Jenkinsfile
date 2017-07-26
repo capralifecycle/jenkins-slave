@@ -31,6 +31,12 @@ dockerNode {
     img = docker.build('jenkins2/slave-wrapper', '--pull .')
   }
 
+  stage('Test image to verify Docker-in-Docker works') {
+    img.inside('--privileged') {
+      sh './jenkins/test-dind.sh'
+    }
+  }
+
   if (env.BRANCH_NAME == 'master') {
     def tagName = sh([
       returnStdout: true,
