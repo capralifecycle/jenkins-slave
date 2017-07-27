@@ -9,3 +9,10 @@ container within itself.
 
 For the actual Jenkins slave, see
 https://github.com/capralifecycle/jenkins-slave
+
+## Deploying new slaves
+
+We automatically deploy new slaves when a build succeeds. If a faulty
+slave is being deployed, no slaves might be available in Jenkins.
+A manual deploy can be done through AWS console and ECS, e.g. by
+using a previous task definition.
