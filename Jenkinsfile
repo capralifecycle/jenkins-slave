@@ -20,18 +20,23 @@ properties([
   ],
 ])
 
+def dockerImageName = '923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave'
+
 dockerNode {
   stage('Checkout source') {
     checkout scm
   }
 
   def img
+  def lastImageId = dockerPullCacheImage(dockerImageName)
 
   stage('Build Docker image') {
-    img = docker.build('jenkins2/slave', '--pull .')
+    img = docker.build(dockerImageName, "--cache-from $dockerImageName:$lastImageId --pull .")
   }
 
-  if (env.BRANCH_NAME == 'master') {
+  def isSameImage = dockerPushCacheImage(img, lastImageId)
+
+  if (env.BRANCH_NAME == 'master' && !isSameImage) {
     stage('Push Docker image') {
       def tagName = sh([
         returnStdout: true,
