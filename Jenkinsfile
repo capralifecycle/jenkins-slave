@@ -31,7 +31,7 @@ dockerNode {
   def lastImageId = dockerPullCacheImage(dockerImageName)
 
   stage('Build Docker image') {
-    img = docker.build(dockerImageName, "--cache-from $dockerImageName --pull .")
+    img = docker.build(dockerImageName, "--cache-from $dockerImageName:$lastImageId --pull .")
   }
 
   def isSameImage = dockerPushCacheImage(img, lastImageId)
