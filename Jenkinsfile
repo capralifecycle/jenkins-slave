@@ -75,13 +75,13 @@ buildConfig([
 
 def askDeploy(body) {
   milestone 1
-  if (shouldDeploy(version)) {
+  if (shouldDeploy()) {
     milestone 2
     body()
   }
 }
 
-def shouldDeploy(version) {
+def shouldDeploy() {
   stage('Asking to deploy') {
     try {
       slackNotify message: "Need input to deploy new Jenkins slaves to ECS: `<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>`"
