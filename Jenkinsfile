@@ -18,6 +18,8 @@ buildConfig([
     teamDomain: 'cals-capra',
   ],
 ]) {
+  def tagName
+
   dockerNode {
     stage('Checkout source') {
       checkout scm
@@ -43,7 +45,7 @@ buildConfig([
     }
 
     if (env.BRANCH_NAME == 'master' && !isSameImage) {
-      def tagName = sh([
+      tagName = sh([
         returnStdout: true,
         script: 'date +%Y%m%d-%H%M'
       ]).trim() + '-' + env.BUILD_NUMBER
@@ -52,13 +54,42 @@ buildConfig([
         img.push(tagName)
         img.push('latest')
       }
+    }
+  }
 
-      // TODO: Deploy new slaves while we run on one? Does it even work? Let's try!
-      stage('Deploy to ECS') {
-        def image = "$dockerImageName:$tagName"
-        ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave -i $image")
-        slackNotify message: "Deploying new slaves for Jenkins to ECS"
+  if (tagName != null) {
+    askDeploy {
+      dockerNode {
+        // The ecs-deploy utility returns after one instance has been deployed.
+        // As such it should normally not bring down this slave instance we
+        // are deploying from.
+        stage('Deploy to ECS') {
+          def image = "$dockerImageName:$tagName"
+          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave -i $image")
+          slackNotify message: "Deploying new slaves for Jenkins to ECS"
+        }
       }
+    }
+  }
+}
+
+def askDeploy(body) {
+  milestone 1
+  if (shouldDeploy(version)) {
+    milestone 2
+    body()
+  }
+}
+
+def shouldDeploy(version) {
+  stage('Asking to deploy') {
+    try {
+      slackNotify message: "Need input to deploy new Jenkins slaves to ECS: `<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>`"
+      input(message: "Deploy to ECS?")
+      return true
+    } catch (ignored) {
+      echo "Skipping deployment"
+      return false
     }
   }
 }
