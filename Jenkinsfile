@@ -57,6 +57,7 @@ buildConfig([
       stage('Deploy to ECS') {
         def image = "$dockerImageName:$tagName"
         ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave -i $image")
+        slackNotify message: "Deploying new slaves for Jenkins to ECS"
       }
     }
   }
