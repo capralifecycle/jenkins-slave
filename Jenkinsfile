@@ -13,6 +13,10 @@ buildConfig([
     ]),
   ],
   githubUrl: 'https://github.com/capralifecycle/jenkins-slave/',
+  slack: [
+    channel: '#cals-dev-info',
+    teamDomain: 'cals-capra',
+  ],
 ]) {
   dockerNode {
     stage('Checkout source') {
