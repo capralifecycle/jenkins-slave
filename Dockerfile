@@ -40,9 +40,9 @@ RUN set -ex; \
     apk del .gosu-deps
 
 # install Docker client
-# reference: https://github.com/docker-library/docker/blob/b39a2369d4017d89c6f369a63be5d59011d88fd5/17.03/Dockerfile
+# reference: https://github.com/docker-library/docker/blob/cf3d3343f291146f9b79ccafa725a9bb28257ea0/18.03/Dockerfile
 ENV DOCKER_CHANNEL stable
-ENV DOCKER_VERSION 17.03.1-ce
+ENV DOCKER_VERSION 18.03.1-ce
 
 RUN set -x \
     && curl -fSL "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/x86_64/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
