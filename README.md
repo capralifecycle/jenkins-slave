@@ -1,5 +1,7 @@
 # Jenkins slave
 
+[![Build Status](https://jenkins.capra.tv/buildStatus/icon?job=jenkins-slave/master)](https://jenkins.capra.tv/job/jenkins-slave/master)
+
 This repository contains the Docker image for Jenkins slave used with
 our Jenkins 2 setup.
 
