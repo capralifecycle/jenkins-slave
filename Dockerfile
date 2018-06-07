@@ -61,7 +61,7 @@ RUN set -x \
 # install Jenkins slave
 # inspiration: https://github.com/carlossg/jenkins-swarm-slave-docker/blob/master/Dockerfile
 # see https://wiki.jenkins-ci.org/display/JENKINS/Swarm+Plugin
-ENV JENKINS_SWARM_VERSION 3.4
+ENV JENKINS_SWARM_VERSION 3.12
 
 RUN addgroup jenkins \
     && adduser -D -u 1000 -G jenkins jenkins \
