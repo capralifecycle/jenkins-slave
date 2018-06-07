@@ -1,5 +1,7 @@
 # Jenkins slave wrapper
 
+[![Build Status](https://jenkins.capra.tv/buildStatus/icon?job=jenkins-slave-wrapper/master)](https://jenkins.capra.tv/job/jenkins-slave-wrapper/master)
+
 This repository contains the Docker image for Jenkins slave wrapper used with
 our Jenkins 2 setup.
 
