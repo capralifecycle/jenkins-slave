@@ -30,6 +30,14 @@ buildConfig([
       img = docker.build(dockerImageName, "--cache-from $dockerImageName:$lastImageId --pull .")
     }
 
+    stage('Test image to verify build') {
+      // We need to force the container to run as root so that the entrypoint
+      // will work correctly.
+      img.inside('-u root') {
+        sh './jenkins/test-image.sh'
+      }
+    }
+
     def isSameImage = dockerPushCacheImage(img, lastImageId)
 
     if (env.BRANCH_NAME == 'master' && !isSameImage) {
