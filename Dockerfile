@@ -17,4 +17,4 @@ RUN apk add -Uuv \
 
 COPY container/* /
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/entrypoint.sh"]
