@@ -69,12 +69,12 @@ buildConfig([
 
         // The modern and legacy slaves use the same wrapper image.
 
-        stage('Deploy modern slaves to ECS') {
-          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave -i $image")
-        }
-
         stage('Deploy legacy slaves to ECS') {
           ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave-legacy -i $image")
+        }
+
+        stage('Deploy modern slaves to ECS') {
+          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave -i $image")
         }
       }
     }
