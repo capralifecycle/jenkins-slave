@@ -31,7 +31,8 @@ PASS=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-
 # when running wrapper docker container
 
 # Run the slave
-image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave:${SLAVE_VERSION:-latest}
+tag=${SLAVE_VERSION:-latest}
+image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave:$tag
 docker pull $image
 docker run \
   -e MESOS_TASK_ID="$(hostname)" \
@@ -44,5 +45,5 @@ docker run \
     -labels "$SLAVE_LABELS" \
     -username "$USER" \
     -password "$PASS" \
-    -name "docker" \
+    -name "$tag" \
     -executors 1
