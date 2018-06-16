@@ -27,8 +27,8 @@ PASS=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-
 # because we are running Docker-in-Docker.
 # See https://github.com/jenkinsci/swarm-plugin/blob/1c7c42d88c4db78771020e0db18ea644b2286570/client/src/main/java/hudson/plugins/swarm/SwarmClient.java#L56
 
-# SLAVE_VERSION and JAVA_OPTS are passed as environment variables when running
-# wrapper docker container
+# SLAVE_LABELS, SLAVE_VERSION and JAVA_OPTS are passed as environment variables
+# when running wrapper docker container
 
 # Run the slave
 image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave:${SLAVE_VERSION:-latest}
@@ -41,7 +41,7 @@ docker run \
   $image \
     -disableSslVerification \
     -master "http://jenkins-internal.capra.tv" \
-    -labels "docker" \
+    -labels "$SLAVE_LABELS" \
     -username "$USER" \
     -password "$PASS" \
     -name "docker" \
