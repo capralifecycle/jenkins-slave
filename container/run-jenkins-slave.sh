@@ -22,6 +22,10 @@ eval $(aws ecr get-login --no-include-email --region eu-central-1)
 USER=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-slave/username | jq -r .Parameters[0].Value)
 PASS=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-slave/password --with-decryption | jq -r .Parameters[0].Value)
 
+# Save password to file instead of passing as argument
+passfile=/run/jenkins-slave-password
+echo "$PASS" >$passfile
+
 # NOTE: We use MESOS_TASK_ID because the swarm client accepts it to use as a
 # hash appended to the name. The default is to used the IP-adress which conflicts
 # because we are running Docker-in-Docker.
@@ -33,20 +37,33 @@ PASS=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-
 # - SLAVE_LABELS
 # - SLAVE_VERSION
 
-# Run the slave
+# Pull image we will be running
 tag=${SLAVE_VERSION:-latest}
 image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave:$tag
 docker pull $image
+
+# Schedule a deletion of the password after giving the
+# slave time to pick it up. This reduces the possibility that a
+# job can extract the password. Using a file to transport the
+# password also ensures it's not visible in `ps aux` or when
+# listing environment variables
+(
+  sleep 5
+  rm $passfile
+) &
+
+# Run the slave
 docker run \
   -e MESOS_TASK_ID="$(hostname)" \
   -e JAVA_OPTS="$JAVA_OPTS" \
   -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI="$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" \
   -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $passfile:$passfile \
   $image \
     -disableSslVerification \
     -master "http://jenkins-internal.capra.tv" \
     -labels "$SLAVE_LABELS" \
     -username "$USER" \
-    -password "$PASS" \
+    -passwordFile "$passfile" \
     -name "$tag" \
     -executors "${SLAVE_EXECUTORS:-1}"
