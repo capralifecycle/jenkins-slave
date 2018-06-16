@@ -27,8 +27,11 @@ PASS=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-
 # because we are running Docker-in-Docker.
 # See https://github.com/jenkinsci/swarm-plugin/blob/1c7c42d88c4db78771020e0db18ea644b2286570/client/src/main/java/hudson/plugins/swarm/SwarmClient.java#L56
 
-# SLAVE_LABELS, SLAVE_VERSION and JAVA_OPTS are passed as environment variables
-# when running wrapper docker container
+# Environment variables passed when running wrapper docker container:
+# - JAVA_OPTS
+# - SLAVE_EXECUTORS
+# - SLAVE_LABELS
+# - SLAVE_VERSION
 
 # Run the slave
 tag=${SLAVE_VERSION:-latest}
@@ -46,4 +49,4 @@ docker run \
     -username "$USER" \
     -password "$PASS" \
     -name "$tag" \
-    -executors 1
+    -executors "${SLAVE_EXECUTORS:-1}"
