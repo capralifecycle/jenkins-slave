@@ -1,6 +1,9 @@
 # Jenkins legacy slave
 
-[![Build Status](https://jenkins.capra.tv/buildStatus/icon?job=jenkins-slave/legacy)](https://jenkins.capra.tv/job/jenkins-slave/legacy/job/legacy/)
+[master](https://github.com/capralifecycle/jenkins-slave) | [legacy](https://github.com/capralifecycle/jenkins-slave/tree/legacy)
+:---: | :---:
+[![Build Status](https://jenkins.capra.tv/buildStatus/icon?job=jenkins-slave/legacy)](https://jenkins.capra.tv/job/jenkins-slave/legacy/job/legacy/) | [![Build Status](https://jenkins.capra.tv/buildStatus/icon?job=jenkins-slave/master)](https://jenkins.capra.tv/job/jenkins-slave/master/job/master/)
+thin docker-only image | thick multi-role image
 
 The legacy slave contains build tools to support legacy jobs not using
 Jenkinsfile and the improved Docker environment. See the `master` branch for
