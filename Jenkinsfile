@@ -63,10 +63,18 @@ buildConfig([
         // The ecs-deploy utility returns after one instance has been deployed.
         // As such it should normally not bring down this slave instance we
         // are deploying from.
-        stage('Deploy to ECS') {
-          def image = "$dockerImageName:$tagName"
+
+        slackNotify message: "Deploying new slaves for Jenkins to ECS"
+        def image = "$dockerImageName:$tagName"
+
+        // The modern and legacy slaves use the same wrapper image.
+
+        stage('Deploy modern slaves to ECS') {
           ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave -i $image")
-          slackNotify message: "Deploying new slaves for Jenkins to ECS"
+        }
+
+        stage('Deploy legacy slaves to ECS') {
+          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave-legacy -i $image")
         }
       }
     }
