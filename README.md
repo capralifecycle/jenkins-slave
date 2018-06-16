@@ -1,6 +1,10 @@
-# Jenkins slave
+# Jenkins legacy slave
 
-[![Build Status](https://jenkins.capra.tv/buildStatus/icon?job=jenkins-slave/master)](https://jenkins.capra.tv/job/jenkins-slave/master/job/master/)
+[![Build Status](https://jenkins.capra.tv/buildStatus/icon?job=jenkins-slave/legacy)](https://jenkins.capra.tv/job/jenkins-slave/legacy/job/legacy/)
+
+The legacy slave contains build tools to support legacy jobs not using
+Jenkinsfile and the improved Docker environment. See the `master` branch for
+the modern slave.
 
 This repository contains the Docker image for Jenkins slave used with
 our Jenkins 2 setup.

@@ -40,15 +40,14 @@ buildConfig([
 
     def isSameImage = dockerPushCacheImage(img, lastImageId)
 
-    if (env.BRANCH_NAME == 'master' && !isSameImage) {
+    if (env.BRANCH_NAME == 'legacy' && !isSameImage) {
       stage('Push Docker image') {
         def tagName = sh([
           returnStdout: true,
           script: 'date +%Y%m%d-%H%M'
-        ]).trim() + '-' + env.BUILD_NUMBER
+        ]).trim() + '-legacy-' + env.BUILD_NUMBER
 
         img.push(tagName)
-        img.push('latest')
 
         slackNotify message: "New Docker image available: $dockerImageName:$tagName"
       }
