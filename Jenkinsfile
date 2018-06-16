@@ -48,6 +48,7 @@ buildConfig([
         ]).trim() + '-legacy-' + env.BUILD_NUMBER
 
         img.push(tagName)
+        img.push('legacy')
 
         slackNotify message: "New Docker image available: $dockerImageName:$tagName"
       }
