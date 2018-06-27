@@ -10,7 +10,6 @@ buildConfig([
       cron('H H(2-6) * * *'),
     ]),
   ],
-  githubUrl: 'https://github.com/capralifecycle/jenkins-slave/',
   slack: [
     channel: '#cals-dev-info',
     teamDomain: 'cals-capra',
