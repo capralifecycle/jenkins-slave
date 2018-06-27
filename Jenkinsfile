@@ -28,7 +28,7 @@ buildConfig([
     def lastImageId = dockerPullCacheImage(dockerImageName)
 
     stage('Build Docker image') {
-      img = docker.build(dockerImageName, "--cache-from $dockerImageName:$lastImageId --pull .")
+      img = docker.build(dockerImageName, "--cache-from $lastImageId --pull .")
     }
 
     def isSameImage = dockerPushCacheImage(img, lastImageId)
