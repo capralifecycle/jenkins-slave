@@ -38,7 +38,7 @@ def build(name, additionalTag = null) {
     def lastImageId = dockerPullCacheImage(dockerImageName, name)
 
     stage('Build Docker image') {
-      img = docker.build(dockerImageName, "--cache-from $dockerImageName:$lastImageId --pull -f ./$name/Dockerfile .")
+      img = docker.build(dockerImageName, "--cache-from $lastImageId --pull -f ./$name/Dockerfile .")
     }
 
     stage('Test image to verify build') {
