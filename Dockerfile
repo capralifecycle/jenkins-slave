@@ -1,6 +1,6 @@
 # inspiration:
 # - https://github.com/jenkinsci/docker-workflow-plugin/tree/master/demo
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jdk-alpine
 
 RUN apk add --no-cache \
              ca-certificates \
@@ -70,6 +70,40 @@ RUN addgroup jenkins \
           /usr/share/jenkins/swarm-client-$JENKINS_SWARM_VERSION.jar \
           https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/$JENKINS_SWARM_VERSION/swarm-client-$JENKINS_SWARM_VERSION.jar \
     && chmod 755 /usr/share/jenkins
+
+# Setup below is additional tools used due to builds not building in Docker
+# requiring these tools to be installed in the slave itself.
+
+RUN set -eux; \
+    apk add --no-cache \
+        bash \
+        btrfs-progs \
+        e2fsprogs-extra \
+        fontconfig \
+        gettext \
+        groff \
+        iptables \
+        jq \
+        less \
+        make \
+        maven \
+        nodejs \
+        py2-pip \
+        python \
+        supervisor \
+        ttf-dejavu \
+        xz \
+        yarn \
+    ; \
+
+    # AWS stuff
+    curl -fSL "https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest" -o /usr/local/bin/ecs-cli; \
+    chmod +x /usr/local/bin/ecs-cli; \
+    curl -fSL https://raw.githubusercontent.com/silinternational/ecs-deploy/develop/ecs-deploy -o /usr/local/bin/ecs-deploy; \
+    chmod +x /usr/local/bin/ecs-deploy; \
+
+    # Make bash default shell
+    ln -sf /bin/bash /bin/sh
 
 VOLUME ["/home/jenkins/"]
 
