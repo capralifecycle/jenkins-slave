@@ -3,8 +3,6 @@
 // See https://github.com/capralifecycle/jenkins-pipeline-library
 @Library('cals') _
 
-def dockerImageName = '923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave'
-
 buildConfig([
   jobProperties: [
     pipelineTriggers([
@@ -18,16 +16,29 @@ buildConfig([
     teamDomain: 'cals-capra',
   ],
 ]) {
+  parallel (
+    'modern': {
+      build('modern', 'latest')
+    },
+    'classic': {
+      build('classic', 'classic')
+    },
+  )
+}
+
+def build(name, rollingTag) {
+  def dockerImageName = '923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave'
+
   dockerNode {
     stage('Checkout source') {
       checkout scm
     }
 
     def img
-    def lastImageId = dockerPullCacheImage(dockerImageName)
+    def lastImageId = dockerPullCacheImage(dockerImageName, name)
 
     stage('Build Docker image') {
-      img = docker.build(dockerImageName, "--cache-from $dockerImageName:$lastImageId --pull .")
+      img = docker.build(dockerImageName, "--cache-from $dockerImageName:$lastImageId --pull -f ./$name/Dockerfile .")
     }
 
     stage('Test image to verify build') {
@@ -38,17 +49,17 @@ buildConfig([
       }
     }
 
-    def isSameImage = dockerPushCacheImage(img, lastImageId)
+    def isSameImage = dockerPushCacheImage(img, lastImageId, name)
 
     if (env.BRANCH_NAME == 'master' && !isSameImage) {
       stage('Push Docker image') {
         def tagName = sh([
           returnStdout: true,
           script: 'date +%Y%m%d-%H%M'
-        ]).trim() + '-' + env.BUILD_NUMBER
+        ]).trim() + "-$name-${env.BUILD_NUMBER}"
 
         img.push(tagName)
-        img.push('latest')
+        img.push(rollingTag)
 
         slackNotify message: "New Docker image available: $dockerImageName:$tagName"
       }
