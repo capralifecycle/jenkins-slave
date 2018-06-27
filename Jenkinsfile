@@ -21,12 +21,12 @@ buildConfig([
       build('modern', 'latest')
     },
     'classic': {
-      build('classic', 'classic')
+      build('classic')
     },
   )
 }
 
-def build(name, rollingTag) {
+def build(name, additionalTag = null) {
   def dockerImageName = '923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave'
 
   dockerNode {
@@ -59,7 +59,11 @@ def build(name, rollingTag) {
         ]).trim() + "-$name-${env.BUILD_NUMBER}"
 
         img.push(tagName)
-        img.push(rollingTag)
+        img.push(name)
+
+        if (additionalTag != null) {
+          img.push(additionalTag)
+        }
 
         slackNotify message: "New Docker image available: $dockerImageName:$tagName"
       }
