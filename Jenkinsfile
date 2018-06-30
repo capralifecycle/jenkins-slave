@@ -3,13 +3,17 @@
 // See https://github.com/capralifecycle/jenkins-pipeline-library
 @Library('cals') _
 
+def jobProperties = []
+
+if (env.BRANCH_NAME == 'master') {
+  jobProperties << pipelineTriggers([
+    // Build a new version every night so we keep up to date with upstream changes
+    cron('H H(2-6) * * *'),
+  ])
+}
+
 buildConfig([
-  jobProperties: [
-    pipelineTriggers([
-      // Build a new version every night so we keep up to date with upstream changes
-      cron('H H(2-6) * * *'),
-    ]),
-  ],
+  jobProperties: jobProperties,
   slack: [
     channel: '#cals-dev-info',
     teamDomain: 'cals-capra',
