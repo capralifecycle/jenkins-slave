@@ -66,10 +66,10 @@ buildConfig([
         slackNotify message: "Deploying new slaves for Jenkins to ECS"
         def image = "$dockerImageName:$tagName"
 
-        // The modern and legacy slaves use the same wrapper image.
+        // The modern and classic slaves use the same wrapper image.
 
-        stage('Deploy legacy slaves to ECS') {
-          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave-legacy -i $image")
+        stage('Deploy classic slaves to ECS') {
+          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave-classic -i $image")
         }
 
         stage('Deploy modern slaves to ECS') {
