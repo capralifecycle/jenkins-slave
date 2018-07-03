@@ -73,7 +73,7 @@ buildConfig([
         }
 
         stage('Deploy modern slaves to ECS') {
-          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave -i $image")
+          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave-modern -i $image")
         }
       }
     }
