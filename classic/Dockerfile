@@ -105,7 +105,11 @@ RUN set -eux; \
     chmod +x /usr/local/bin/ecs-deploy; \
 
     # Make bash default shell
-    ln -sf /bin/bash /bin/sh
+    ln -sf /bin/bash /bin/sh; \
+
+    # Dont check host keys when connecting with ssh (Git) from the docker container
+    sed -i 's/#   StrictHostKeyChecking .*/    StrictHostKeyChecking no/' /etc/ssh/ssh_config
+
 
 VOLUME ["/home/jenkins/"]
 
