@@ -8,6 +8,7 @@ RUN apk add --no-cache \
              git \
              openssh-client \
              openssl \
+             procps \
              py-pip \
              tar \
     && pip install awscli
