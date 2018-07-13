@@ -39,7 +39,7 @@ echo "$PASS" >$passfile
 
 # Pull image we will be running
 tag=${SLAVE_VERSION:-latest}
-image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave:$tag
+image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/buildtools/service/jenkins-slave:$tag
 docker pull $image
 
 # Schedule a deletion of the password after giving the
