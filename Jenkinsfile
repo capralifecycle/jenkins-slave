@@ -30,7 +30,7 @@ buildConfig([
 }
 
 def build(name, additionalTag = null) {
-  def dockerImageName = '923402097046.dkr.ecr.eu-central-1.amazonaws.com/jenkins2/slave'
+  def dockerImageName = '923402097046.dkr.ecr.eu-central-1.amazonaws.com/buildtools/service/jenkins-slave'
 
   dockerNode {
     stage('Checkout source') {
