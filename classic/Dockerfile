@@ -90,6 +90,7 @@ RUN set -eux; \
         less \
         make \
         maven \
+        npm \
         nodejs \
         py2-pip \
         python \
