@@ -58,7 +58,9 @@ buildConfig([
 
   if (tagName != null) {
     askDeploy {
-      dockerNode {
+      // Ensure we only use modern docker node to avoid deploying from classic node
+      // which we will bring down.
+      dockerNode([label: 'docker && modern']) {
         // The ecs-deploy utility returns after one instance has been deployed.
         // As such it should normally not bring down this slave instance we
         // are deploying from.
