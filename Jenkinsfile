@@ -38,10 +38,14 @@ def build(name, additionalTag = null) {
     }
 
     def img
+    def tagName = sh([
+      returnStdout: true,
+      script: 'date +%Y%m%d-%H%M'
+    ]).trim() + "-$name-${env.BUILD_NUMBER}"
     def lastImageId = dockerPullCacheImage(dockerImageName, name)
 
     stage('Build Docker image') {
-      img = docker.build(dockerImageName, "--cache-from $lastImageId --pull -f ./$name/Dockerfile .")
+      img = docker.build("$dockerImageName:$tagName", "--cache-from $lastImageId --pull -f ./$name/Dockerfile .")
     }
 
     stage('Test image to verify build') {
@@ -56,11 +60,6 @@ def build(name, additionalTag = null) {
 
     if (env.BRANCH_NAME == 'master' && !isSameImage) {
       stage('Push Docker image') {
-        def tagName = sh([
-          returnStdout: true,
-          script: 'date +%Y%m%d-%H%M'
-        ]).trim() + "-$name-${env.BUILD_NUMBER}"
-
         img.push(tagName)
         img.push(name)
 
