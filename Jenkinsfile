@@ -5,13 +5,28 @@
 
 def dockerImageName = '923402097046.dkr.ecr.eu-central-1.amazonaws.com/buildtools/service/jenkins-slave-wrapper'
 
+
+def jobProperties = [
+  parameters([
+    // Add parameter so we can build without using cached image layers.
+    // This forces plugins to be reinstalled to their latest version.
+    booleanParam(
+      defaultValue: false,
+      description: 'Force build without Docker cache',
+      name: 'docker_skip_cache'
+    ),
+  ]),
+]
+
+if (env.BRANCH_NAME == 'master') {
+  jobProperties << pipelineTriggers([
+    // Build a new version every night so we keep up to date with upstream changes
+    cron('H H(2-6) * * *'),
+  ])
+}
+
 buildConfig([
-  jobProperties: [
-    pipelineTriggers([
-      // Build a new version every night so we keep up to date with upstream changes
-      cron('H H(2-6) * * *'),
-    ]),
-  ],
+  jobProperties: jobProperties,
   slack: [
     channel: '#cals-dev-info',
     teamDomain: 'cals-capra',
@@ -28,7 +43,11 @@ buildConfig([
     def lastImageId = dockerPullCacheImage(dockerImageName)
 
     stage('Build Docker image') {
-      img = docker.build(dockerImageName, "--cache-from $lastImageId --pull .")
+      def args = ""
+      if (params.docker_skip_cache) {
+        args = " --no-cache"
+      }
+      img = docker.build(dockerImageName, "--cache-from $lastImageId$args --pull .")
     }
 
     def isSameImage = dockerPushCacheImage(img, lastImageId)
@@ -94,10 +113,13 @@ def shouldDeploy() {
   stage('Asking to deploy') {
     try {
       slackNotify message: "Need input to deploy new Jenkins slaves to ECS: `<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>`"
-      input(message: "Deploy to ECS?")
+      timeout(time: 6, unit: 'HOURS') {
+        input(message: "Deploy to ECS?")
+      }
       return true
     } catch (ignored) {
       echo "Skipping deployment"
+      currentBuild.result = 'ABORTED'
       return false
     }
   }
