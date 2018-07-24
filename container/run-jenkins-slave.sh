@@ -22,6 +22,11 @@ eval $(aws ecr get-login --no-include-email --region eu-central-1)
 USER=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-slave/username | jq -r .Parameters[0].Value)
 PASS=$(aws ssm get-parameters --region eu-central-1 --names /buildtools/jenkins-slave/password --with-decryption | jq -r .Parameters[0].Value)
 
+if [ -z "$USER" ] || [ -z "$PASS" ]; then
+  echo "Username and/or password was not retrieved from SSM. Possibly missing credentials. Maybe you are not running this on ECS?"
+  exit 1
+fi
+
 # Save password to file instead of passing as argument
 passfile=/run/jenkins-slave-password
 echo "$PASS" >$passfile
