@@ -73,6 +73,9 @@ RUN addgroup jenkins \
           https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/$JENKINS_SWARM_VERSION/swarm-client-$JENKINS_SWARM_VERSION.jar \
     && chmod 755 /usr/share/jenkins
 
+# Ensure JVM uses cgroups for memory limits due to running as a container
+ENV JAVA_TOOL_OPTIONS "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dsun.zip.disableMemoryMapping=true"
+
 VOLUME ["/home/jenkins/"]
 
 ADD container/entrypoint.sh /entrypoint.sh

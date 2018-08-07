@@ -112,6 +112,8 @@ RUN set -eux; \
     # Dont check host keys when connecting with ssh (Git) from the docker container
     sed -i 's/#   StrictHostKeyChecking .*/    StrictHostKeyChecking no/' /etc/ssh/ssh_config
 
+# Ensure JVM uses cgroups for memory limits due to running as a container
+ENV JAVA_TOOL_OPTIONS "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dsun.zip.disableMemoryMapping=true"
 
 VOLUME ["/home/jenkins/"]
 
