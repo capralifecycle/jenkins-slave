@@ -14,7 +14,7 @@ https://github.com/capralifecycle/jenkins-slave
 
 ## Deploying new slaves
 
-We automatically deploy new slaves when a build succeeds. If a faulty
-slave is being deployed, no slaves might be available in Jenkins.
-A manual deploy can be done through AWS console and ECS, e.g. by
-using a previous task definition.
+New slave wrapper builds must be deloyed by following the procedure for
+https://github.com/capralifecycle/aws-infrastructure/tree/master/cloudformation/buildtools.
+
+See `jenkins.yml` in that repo for the different slaves we run.

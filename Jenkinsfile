@@ -5,7 +5,6 @@
 
 def dockerImageName = '923402097046.dkr.ecr.eu-central-1.amazonaws.com/buildtools/service/jenkins-slave-wrapper'
 
-
 def jobProperties = [
   parameters([
     // Add parameter so we can build without using cached image layers.
@@ -59,7 +58,7 @@ buildConfig([
     }
 
     if (env.BRANCH_NAME == 'master' && isSameImage) {
-      echo 'No release/deploy will be made because image is the same'
+      echo 'No release will be made because image is the same as earlier build'
     }
 
     if (env.BRANCH_NAME == 'master' && !isSameImage) {
@@ -72,55 +71,8 @@ buildConfig([
         img.push(tagName)
         img.push('latest')
       }
-    }
-  }
 
-  if (tagName != null) {
-    askDeploy {
-      // Ensure we only use modern docker node to avoid deploying from classic node
-      // which we will bring down.
-      dockerNode([label: 'docker && modern']) {
-        // The ecs-deploy utility returns after one instance has been deployed.
-        // As such it should normally not bring down this slave instance we
-        // are deploying from.
-
-        slackNotify message: "Deploying new slaves for Jenkins to ECS"
-        def image = "$dockerImageName:$tagName"
-
-        // The modern and classic slaves use the same wrapper image.
-
-        stage('Deploy classic slaves to ECS') {
-          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave-classic -i $image")
-        }
-
-        stage('Deploy modern slaves to ECS') {
-          ecsDeploy("--aws-instance-profile -r eu-central-1 -c buildtools-stable -n jenkins-slave-modern -i $image")
-        }
-      }
-    }
-  }
-}
-
-def askDeploy(body) {
-  milestone 1
-  if (shouldDeploy()) {
-    milestone 2
-    body()
-  }
-}
-
-def shouldDeploy() {
-  stage('Asking to deploy') {
-    try {
-      slackNotify message: "Need input to deploy new Jenkins slaves to ECS: `<${env.BUILD_URL}|${env.JOB_NAME} [${env.BUILD_NUMBER}]>`"
-      timeout(time: 6, unit: 'HOURS') {
-        input(message: "Deploy to ECS?")
-      }
-      return true
-    } catch (ignored) {
-      echo "Skipping deployment"
-      currentBuild.result = 'ABORTED'
-      return false
+      slackNotify message: "New Jenkins slave wrapper image available: $tagName"
     }
   }
 }
