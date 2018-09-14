@@ -53,7 +53,8 @@ docker pull $image
 # password also ensures it's not visible in `ps aux` or when
 # listing environment variables
 (
-  sleep 5
+  sleep 60
+  echo "Wiping slave credentials from disk"
   rm $passfile
 ) &
 
