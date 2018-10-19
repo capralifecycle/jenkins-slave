@@ -19,3 +19,8 @@ We build to different slaves:
 
 * *Classic slave*: Thick slave supporting classic freestyle jobs that do not
   use Docker to provide tooling. Contains JDK, node and more tooling.
+
+* *Classic slave for Java 11*: Thick slave supporting classic freestyle jobs
+  for Java 11. Contains JDK, node and more tooling. This is considered only
+  temporary until either the two classic slaves are merged or we have switch
+  to using the modern slaves/builds.

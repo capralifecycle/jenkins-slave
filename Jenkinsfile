@@ -26,6 +26,13 @@ buildConfig([
     'classic': {
       build('classic')
     },
+    // TODO: This is only a temporary solution to get quick Java 11 support.
+    // We want to either have Java 8 and Java 11 in the same classic slave,
+    // or make a improved Jenkinsfile to support our flows.
+    // See https://github.com/capralifecycle/buildtools-example-java-2
+    'classic-java-11': {
+      build('classic-java-11')
+    },
   )
 }
 
