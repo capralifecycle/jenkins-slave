@@ -13,6 +13,6 @@ for model in modern classic classic-java-11; do
     -w /data \
     -u root \
     --entrypoint= \
-    jenkins-slave \
+    jenkins-slave-$model \
     sh -c './jenkins/test-image.sh'
 done
