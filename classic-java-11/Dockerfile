@@ -68,13 +68,17 @@ RUN set -eux; \
     ; \
     rm -rf /var/lib/apt/lists/*; \
     npm install -g yarn; \
-
+    \
+    # Make Maven available on same path as in normal classic slave, and
+    # the path that Jenkins expect.
+    ln -s /usr/share/maven /usr/share/java/maven-3; \
+    \
     # AWS stuff
     curl -fSL "https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest" -o /usr/local/bin/ecs-cli; \
     chmod +x /usr/local/bin/ecs-cli; \
     curl -fSL https://raw.githubusercontent.com/silinternational/ecs-deploy/develop/ecs-deploy -o /usr/local/bin/ecs-deploy; \
     chmod +x /usr/local/bin/ecs-deploy; \
-
+    \
     # Dont check host keys when connecting with ssh (Git) from the docker container
     sed -i 's/#   StrictHostKeyChecking .*/    StrictHostKeyChecking no/' /etc/ssh/ssh_config
 
