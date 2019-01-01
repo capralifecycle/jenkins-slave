@@ -99,16 +99,16 @@ RUN set -eux; \
         xz \
         yarn \
     ; \
-
+    \
     # AWS stuff
     curl -fSL "https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest" -o /usr/local/bin/ecs-cli; \
     chmod +x /usr/local/bin/ecs-cli; \
     curl -fSL https://raw.githubusercontent.com/silinternational/ecs-deploy/develop/ecs-deploy -o /usr/local/bin/ecs-deploy; \
     chmod +x /usr/local/bin/ecs-deploy; \
-
+    \
     # Make bash default shell
     ln -sf /bin/bash /bin/sh; \
-
+    \
     # Dont check host keys when connecting with ssh (Git) from the docker container
     sed -i 's/#   StrictHostKeyChecking .*/    StrictHostKeyChecking no/' /etc/ssh/ssh_config
 
