@@ -1,19 +1,46 @@
-# Currenly no Alpine version of OpenJDK through "official" channels
-# (See https://github.com/docker-library/openjdk/issues/211)
-FROM openjdk:11-jdk-slim
+FROM azul/zulu-openjdk-alpine:11
 
 RUN set -eux; \
-    apt-get update; \
-    apt-get install --no-install-recommends -y \
+    apk add --no-cache \
+        ca-certificates \
         curl \
         git \
-        gosu \
         openssh-client \
-        python-pip \
-        python-setuptools \
+        openssl \
+        procps \
+        py-pip \
+        tar \
     ; \
-    pip install awscli; \
-    rm -rf /var/lib/apt/lists/*
+    pip install awscli
+
+# install gosu
+# reference: https://github.com/tianon/gosu/blob/master/INSTALL.md
+ENV GOSU_VERSION 1.10
+RUN set -ex; \
+    \
+    apk add --no-cache --virtual .gosu-deps \
+        dpkg \
+        gnupg \
+        openssl \
+    ; \
+    \
+    dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
+    wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
+    wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
+    \
+    # verify the signature
+    export GNUPGHOME="$(mktemp -d)"; \
+    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 || \
+    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 || \
+    gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
+    gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
+    rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc || :; \
+    \
+    chmod +x /usr/local/bin/gosu; \
+    # verify that the binary works
+    gosu nobody true; \
+    \
+    apk del .gosu-deps
 
 # install Docker client
 # reference: https://github.com/docker-library/docker/blob/cf3d3343f291146f9b79ccafa725a9bb28257ea0/18.03/Dockerfile
@@ -40,20 +67,23 @@ RUN set -eux; \
 ENV JENKINS_SWARM_VERSION 3.12
 
 RUN set -eux; \
-    groupadd jenkins; \
-    useradd -m -g jenkins jenkins; \
+    addgroup jenkins; \
+    adduser -D -u 1000 -G jenkins jenkins; \
+    chown -R jenkins /home/jenkins; \
     curl --create-dirs -sSLo \
         /usr/share/jenkins/swarm-client-$JENKINS_SWARM_VERSION.jar \
-        https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/$JENKINS_SWARM_VERSION/swarm-client-$JENKINS_SWARM_VERSION.jar; \
+        https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/$JENKINS_SWARM_VERSION/swarm-client-$JENKINS_SWARM_VERSION.jar \
+    ; \
     chmod 755 /usr/share/jenkins
 
 # Setup below is additional tools used due to builds not building in Docker
 # requiring these tools to be installed in the slave itself.
 
 RUN set -eux; \
-    apt-get update; \
-    apt-get install --no-install-recommends -y \
+    apk add --no-cache \
+        bash \
         btrfs-progs \
+        e2fsprogs-extra \
         fontconfig \
         gettext \
         groff \
@@ -63,11 +93,14 @@ RUN set -eux; \
         make \
         maven \
         npm \
+        nodejs \
+        py2-pip \
+        python \
         supervisor \
         ttf-dejavu \
+        xz \
+        yarn \
     ; \
-    rm -rf /var/lib/apt/lists/*; \
-    npm install -g yarn; \
     \
     # Make Maven available on same path as in normal classic slave, and
     # the path that Jenkins expect.
@@ -78,6 +111,9 @@ RUN set -eux; \
     chmod +x /usr/local/bin/ecs-cli; \
     curl -fSL https://raw.githubusercontent.com/silinternational/ecs-deploy/develop/ecs-deploy -o /usr/local/bin/ecs-deploy; \
     chmod +x /usr/local/bin/ecs-deploy; \
+    \
+    # Make bash default shell
+    ln -sf /bin/bash /bin/sh; \
     \
     # Dont check host keys when connecting with ssh (Git) from the docker container
     sed -i 's/#   StrictHostKeyChecking .*/    StrictHostKeyChecking no/' /etc/ssh/ssh_config
