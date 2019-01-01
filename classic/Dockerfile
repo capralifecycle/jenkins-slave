@@ -10,37 +10,9 @@ RUN apk add --no-cache \
              openssl \
              procps \
              py-pip \
+             su-exec \
              tar \
     && pip install awscli
-
-# install gosu
-# reference: https://github.com/tianon/gosu/blob/master/INSTALL.md
-ENV GOSU_VERSION 1.10
-RUN set -ex; \
-    \
-    apk add --no-cache --virtual .gosu-deps \
-        dpkg \
-        gnupg \
-        openssl \
-    ; \
-    \
-    dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
-    wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
-    wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
-    \
-    # verify the signature
-    export GNUPGHOME="$(mktemp -d)"; \
-    gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 || \
-    gpg --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 || \
-    gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
-    gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
-    rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc || :; \
-    \
-    chmod +x /usr/local/bin/gosu; \
-    # verify that the binary works
-    gosu nobody true; \
-    \
-    apk del .gosu-deps
 
 # install Docker client
 # reference: https://github.com/docker-library/docker/blob/cf3d3343f291146f9b79ccafa725a9bb28257ea0/18.03/Dockerfile

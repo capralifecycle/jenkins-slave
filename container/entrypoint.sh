@@ -28,7 +28,7 @@ fi
 if [ $launcher -eq 1 ]; then
     jar=$(ls -1 /usr/share/jenkins/swarm-client-*.jar | tail -n 1)
 
-    gosu jenkins java ${JAVA_OPTS:-} -jar $jar -fsroot "/home/jenkins" "$@"
+    su-exec jenkins java ${JAVA_OPTS:-} -jar $jar -fsroot "/home/jenkins" "$@"
 else
-    gosu jenkins "$@"
+    su-exec jenkins "$@"
 fi
