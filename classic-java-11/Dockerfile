@@ -98,8 +98,9 @@ RUN set -eux; \
     ln -s /usr/share/maven/bin/mvn /usr/bin/mvn; \
     # Make Maven available on same path as in normal classic slave, and
     # the path that Jenkins expect.
-    mkdir -p /usr/share/java/maven-3; \
+    mkdir -p /usr/share/java; \
     ln -s /usr/share/maven /usr/share/java/maven-3; \
+    test -x /usr/share/java/maven-3/bin/mvn; \
     mvn -version
 
 ENV MAVEN_HOME /usr/share/maven
