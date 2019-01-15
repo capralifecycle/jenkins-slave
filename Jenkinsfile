@@ -52,7 +52,7 @@ buildConfig([
     def isSameImage = dockerPushCacheImage(img, lastImageId)
 
     stage('Test image to verify Docker-in-Docker works') {
-      img.inside('--privileged') {
+      img.inside('--privileged --user root') {
         sh './jenkins/test-dind.sh'
       }
     }

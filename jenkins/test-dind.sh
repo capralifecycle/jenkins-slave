@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+export DOCKER_HOST=unix:///docker.sock
+
 # Spawn Docker daemon
 /run-docker.sh &
 

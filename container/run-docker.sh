@@ -10,8 +10,12 @@ set -e
 #
 #   modprobe overlay
 
+# We need to put the socket on a special non-default path due to
+# the builds in jenkins normally forward-mount the existing docker
+# socket, but we wan't to use the Docker-in-Docker socket!
+
 set -- dockerd \
-  --host=unix:///var/run/docker.sock \
+  --host=unix:///docker.sock \
   --host=tcp://0.0.0.0:2375 \
   --storage-driver=overlay2
 
