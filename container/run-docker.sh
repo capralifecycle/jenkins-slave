@@ -14,8 +14,13 @@ set -e
 # the builds in jenkins normally forward-mount the existing docker
 # socket, but we wan't to use the Docker-in-Docker socket!
 
+args="--host=unix:///var/run/docker.sock"
+if [ "$1" = "test" ]; then
+  args="--host=unix:///docker.sock"
+fi
+
 set -- dockerd \
-  --host=unix:///docker.sock \
+  $args \
   --host=tcp://0.0.0.0:2375 \
   --storage-driver=overlay2
 

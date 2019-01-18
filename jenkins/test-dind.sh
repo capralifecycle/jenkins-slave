@@ -4,7 +4,7 @@ set -e
 export DOCKER_HOST=unix:///docker.sock
 
 # Spawn Docker daemon
-/run-docker.sh &
+/run-docker.sh test &
 
 # Wait til Docker is available
 for x in $(seq 1 10); do
