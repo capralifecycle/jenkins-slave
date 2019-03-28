@@ -1,6 +1,6 @@
 # inspiration:
 # - https://github.com/jenkinsci/docker-workflow-plugin/tree/master/demo
-FROM openjdk:8-jre-alpine@sha256:f7ea122d42799223ea01231d2661fd95a2695d6085ba57d6378b68463247011d
+FROM openjdk:8-jre-alpine@sha256:5ae87f16a64ae7ccbb483a6996b004c29676aaa9c18c887bd9ff35c6cbd1d1f6
 
 RUN apk add --no-cache \
              ca-certificates \
