@@ -2,6 +2,8 @@
 # - https://github.com/jenkinsci/docker-workflow-plugin/tree/master/demo
 FROM openjdk:8-jdk-alpine@sha256:9209ebd07f09f2e0f0e8da0884573d852b2fccb05d176852aea94923aaeffbfe
 
+# py3-paramiko and py3-cffi is for docker compose installed later
+# see https://github.com/docker/compose/issues/6617#issuecomment-478662098
 RUN apk add --no-cache \
              ca-certificates \
              curl \
@@ -9,10 +11,12 @@ RUN apk add --no-cache \
              openssh-client \
              openssl \
              procps \
-             py-pip \
+             py3-pip \
+             py3-paramiko \
+             py3-cffi \
              su-exec \
              tar \
-    && pip install awscli
+    && pip3 install awscli
 
 # install Docker client
 # reference: https://github.com/docker-library/docker/blob/cf3d3343f291146f9b79ccafa725a9bb28257ea0/18.03/Dockerfile
@@ -31,7 +35,7 @@ RUN set -x \
     && rm docker.tgz \
     \
     # install docker compose
-    && pip install docker-compose
+    && pip3 install docker-compose
 
 # install Jenkins slave
 # inspiration: https://github.com/carlossg/jenkins-swarm-slave-docker/blob/master/Dockerfile

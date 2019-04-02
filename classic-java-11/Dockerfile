@@ -1,5 +1,7 @@
 FROM azul/zulu-openjdk-alpine:11@sha256:d544c08271d51ec4e9ee5ddc6cc3898b735fe3cc83461040b3602bd43b94aaa2
 
+# py3-paramiko and py3-cffi is for docker compose installed later
+# see https://github.com/docker/compose/issues/6617#issuecomment-478662098
 RUN set -eux; \
     apk add --no-cache \
         ca-certificates \
@@ -8,11 +10,13 @@ RUN set -eux; \
         openssh-client \
         openssl \
         procps \
-        py-pip \
+        py3-pip \
+        py3-paramiko \
+        py3-cffi \
         su-exec \
         tar \
     ; \
-    pip install awscli
+    pip3 install awscli
 
 # install Docker client
 # reference: https://github.com/docker-library/docker/blob/cf3d3343f291146f9b79ccafa725a9bb28257ea0/18.03/Dockerfile
@@ -31,7 +35,7 @@ RUN set -eux; \
     rm docker.tgz; \
     \
     # install docker compose
-    pip install docker-compose
+    pip3 install docker-compose
 
 # install Jenkins slave
 # inspiration: https://github.com/carlossg/jenkins-swarm-slave-docker/blob/master/Dockerfile
