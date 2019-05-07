@@ -6,7 +6,7 @@
 # so that the actual Jenkins slave is a container within this container.
 #
 
-FROM docker:18.09-dind@sha256:884a2f2277ac933490d29d073e42c259a9fe9520df16fa397f95090f4184ebcf
+FROM docker:18.09-dind@sha256:a20899c03432547c5641a72663e2fb791b3e69bdf797a7c2043cdeb704f40a02
 
 RUN apk add -Uuv \
       jq \
