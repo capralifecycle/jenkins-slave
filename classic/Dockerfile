@@ -72,6 +72,8 @@ RUN set -eux; \
         python \
         supervisor \
         ttf-dejavu \
+        # xmlstarlet is used to extract data from pom.xml
+        xmlstarlet \
         xz \
         yarn \
     ; \
