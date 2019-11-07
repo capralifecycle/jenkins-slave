@@ -15,6 +15,10 @@ RUN apk add -Uuv \
     && pip install awscli \
     && addgroup docker
 
+# Set DOCKER_HOST so that it will not be dependent on what happens in the
+# docker own entrypoint script.
+ENV DOCKER_HOST=unix://var/run/docker.sock
+
 COPY container/* /
 
 CMD ["/run.sh"]
