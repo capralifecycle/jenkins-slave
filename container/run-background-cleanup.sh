@@ -2,7 +2,8 @@
 set -eu
 
 while true; do
-  sleep 43200
+  # Run every 6 hour.
+  sleep 21600
   date
   echo "Running cleanup script"
 
@@ -18,10 +19,10 @@ while true; do
   # Remove all unused networks.
   docker network prune --force --filter until=1h
 
-  # Remove images created for more than 3 days ago.
+  # Remove images created for more than 1,5 day ago.
   # The time limit is an attempt to keep some images in
   # cache over a longer time.
-  docker image prune --force --all --filter until=72h
+  docker image prune --force --all --filter until=36h
 
   echo "Cleanup complete"
   date
