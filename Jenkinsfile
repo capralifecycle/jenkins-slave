@@ -48,8 +48,7 @@ buildConfig([
         "923402097046.dkr.ecr.eu-central-1.amazonaws.com/buildtools/service/jenkins-slave-wrapper",
         "latest",
         null,
-        "./wrapper/Dockerfile",
-        "wrapper"
+        "./wrapper/Dockerfile"
       ) { img ->
         stage('Test image to verify Docker-in-Docker works') {
           img.inside('--privileged --user root') {
@@ -66,8 +65,7 @@ def buildWrappedSlave(name, additionalTag = null) {
     "923402097046.dkr.ecr.eu-central-1.amazonaws.com/buildtools/service/jenkins-slave",
     name,
     additionalTag,
-    "./$name/Dockerfile",
-    "."
+    "./$name/Dockerfile"
   ) { img ->
     stage('Test image to verify build') {
       // We need to force the container to run as root so that the entrypoint
@@ -84,7 +82,6 @@ def buildDockerImage(
   name,
   additionalTag,
   dockerfile,
-  contextdir,
   testImage
 ) {
   dockerNode {
@@ -109,7 +106,7 @@ def buildDockerImage(
         args = " --no-cache"
       }
 
-      img = docker.build("$dockerImageName:$tagName", "--cache-from $lastImageId$args --pull -f $dockerfile $contextdir")
+      img = docker.build("$dockerImageName:$tagName", "--cache-from $lastImageId$args --pull -f $dockerfile .")
     }
 
     testImage(img)

@@ -19,6 +19,6 @@ RUN apk add -Uuv \
 # docker own entrypoint script.
 ENV DOCKER_HOST=unix:///var/run/docker.sock
 
-COPY container/* /
+COPY wrapper/container/* /
 
 CMD ["/run.sh"]

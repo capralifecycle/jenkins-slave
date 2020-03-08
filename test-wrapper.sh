@@ -2,7 +2,7 @@
 # Build and test similar to in CI
 set -eux
 
-docker build --pull -t jenkins-slave-wrapper .
+docker build --pull -t jenkins-slave-wrapper -f ./wrapper/Dockerfile .
 docker run \
   --rm \
   -it \
@@ -12,4 +12,4 @@ docker run \
   --entrypoint= \
   --privileged \
   jenkins-slave-wrapper \
-  sh -c './jenkins/test-dind.sh'
+  sh -c './wrapper/jenkins/test-dind.sh'
