@@ -109,7 +109,7 @@ def buildDockerImage(
     def img
     def tagName = sh([
       returnStdout: true,
-      script: 'date +%Y%m%d-%H%M'
+      script: 'date +%Y%m%d-%H%M%S'
     ]).trim() + "$tagExtra-" + env.BUILD_NUMBER
 
     def lastImageId = dockerPullCacheImage(dockerImageName, cacheSuffix)
