@@ -31,6 +31,20 @@ spinn up the slave itself as one of its containers.
   temporary until either the two classic slaves are merged or we have switch
   to using the modern slaves/builds.
 
+## Direct setup
+
+The slave images using this setup runs directly on ECS, so that
+both the Docker daemon and Swarm application is running in the
+same environment.
+
+This allows builds to volume mount files and directories, which
+does not properly work in the wrapper setup.
+
+### Slave versions
+
+* *Modern v2 slave*: Thin slave supposed to only have Docker. Builds use
+  Docker to provide a self-defined build context and tooling.
+
 ## Deploying new slaves
 
 New slave wrapper builds must be deloyed by following the procedure for

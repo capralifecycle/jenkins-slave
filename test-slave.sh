@@ -14,5 +14,5 @@ for model in modern classic classic-java-11; do
     -u root \
     --entrypoint= \
     jenkins-slave-$model \
-    sh -c './jenkins/test-image.sh'
+    sh -c './jenkins/test-slave.sh'
 done

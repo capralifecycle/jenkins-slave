@@ -33,6 +33,20 @@ buildConfig([
     'modern': {
       buildWrappedSlave('modern', 'latest')
     },
+    'modern-v2': {
+      buildDockerImage(
+        "923402097046.dkr.ecr.eu-central-1.amazonaws.com/buildtools/service/jenkins-slave",
+        "modern-v2",
+        null,
+        "./modern-v2/Dockerfile"
+      ) { img ->
+        stage('Test image') {
+          img.inside('--privileged --user root') {
+            sh 'IS_TEST=1 ./jenkins/test-modern-v2.sh'
+          }
+        }
+      }
+    },
     'classic': {
       buildWrappedSlave('classic')
     },
@@ -52,7 +66,7 @@ buildConfig([
       ) { img ->
         stage('Test image to verify Docker-in-Docker works') {
           img.inside('--privileged --user root') {
-            sh './wrapper/jenkins/test-dind.sh'
+            sh './jenkins/test-dind.sh'
           }
         }
       }
@@ -71,7 +85,7 @@ def buildWrappedSlave(name, additionalTag = null) {
       // We need to force the container to run as root so that the entrypoint
       // will work correctly.
       img.inside('-u root') {
-        sh './jenkins/test-image.sh'
+        sh './jenkins/test-slave.sh'
       }
     }
   }
