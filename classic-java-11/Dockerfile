@@ -4,9 +4,12 @@ FROM azul/zulu-openjdk-alpine:11@sha256:e83a2547d6ece480bbf7e7c339bee8afed8165a1
 # see https://github.com/docker/compose/issues/6617#issuecomment-478662098
 RUN set -eux; \
     apk add --no-cache \
+        bash \
         ca-certificates \
         curl \
         git \
+        jq \
+        make \
         openssh-client \
         openssl \
         procps \
@@ -15,8 +18,12 @@ RUN set -eux; \
         py3-cffi \
         su-exec \
         tar \
+        zip \
     ; \
-    pip3 install awscli
+    pip3 install awscli; \
+    \
+    # Make bash default shell
+    ln -sf /bin/bash /bin/sh
 
 # install Docker client and Docker Compose
 RUN set -eux; \
@@ -48,16 +55,13 @@ RUN set -eux; \
 
 RUN set -eux; \
     apk add --no-cache \
-        bash \
         btrfs-progs \
         e2fsprogs-extra \
         fontconfig \
         gettext \
         groff \
         iptables \
-        jq \
         less \
-        make \
         npm \
         nodejs \
         py2-pip \
@@ -75,9 +79,6 @@ RUN set -eux; \
     chmod +x /usr/local/bin/ecs-cli; \
     curl -fSL https://raw.githubusercontent.com/silinternational/ecs-deploy/develop/ecs-deploy -o /usr/local/bin/ecs-deploy; \
     chmod +x /usr/local/bin/ecs-deploy; \
-    \
-    # Make bash default shell
-    ln -sf /bin/bash /bin/sh; \
     \
     # Dont check host keys when connecting with ssh (Git) from the docker container
     sed -i 's/#   StrictHostKeyChecking .*/    StrictHostKeyChecking no/' /etc/ssh/ssh_config

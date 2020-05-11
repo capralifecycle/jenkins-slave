@@ -10,6 +10,7 @@ RUN set -eux; \
       curl \
       git \
       jq \
+      make \
       openjdk8-jre \
       openssh-client \
       openssl \
@@ -19,12 +20,16 @@ RUN set -eux; \
       su-exec \
       supervisor \
       tar \
+      zip \
     ; \
     pip3 install \
       awscli \
       docker-compose \
     ; \
-    addgroup docker
+    addgroup docker; \
+    \
+    # Make bash default shell
+    ln -sf /bin/bash /bin/sh
 
 # Set DOCKER_HOST so that it will not be dependent on what happens in the
 # docker own entrypoint script.

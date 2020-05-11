@@ -5,9 +5,12 @@ FROM openjdk:8-jdk-alpine@sha256:44b3cea369c947527e266275cee85c71a81f20fc5076f6e
 # py3-paramiko and py3-cffi is for docker compose installed later
 # see https://github.com/docker/compose/issues/6617#issuecomment-478662098
 RUN apk add --no-cache \
+             bash \
              ca-certificates \
              curl \
              git \
+             jq \
+             make \
              openssh-client \
              openssl \
              procps \
@@ -16,7 +19,10 @@ RUN apk add --no-cache \
              py3-cffi \
              su-exec \
              tar \
-    && pip3 install awscli
+    && pip3 install awscli \
+    \
+    # Make bash default shell
+    && ln -sf /bin/bash /bin/sh
 
 # install Docker client and Docker Compose
 RUN set -eux; \
@@ -46,16 +52,13 @@ RUN addgroup jenkins \
 
 RUN set -eux; \
     apk add --no-cache \
-        bash \
         btrfs-progs \
         e2fsprogs-extra \
         fontconfig \
         gettext \
         groff \
         iptables \
-        jq \
         less \
-        make \
         maven \
         npm \
         nodejs \
@@ -74,9 +77,6 @@ RUN set -eux; \
     chmod +x /usr/local/bin/ecs-cli; \
     curl -fSL https://raw.githubusercontent.com/silinternational/ecs-deploy/develop/ecs-deploy -o /usr/local/bin/ecs-deploy; \
     chmod +x /usr/local/bin/ecs-deploy; \
-    \
-    # Make bash default shell
-    ln -sf /bin/bash /bin/sh; \
     \
     # Dont check host keys when connecting with ssh (Git) from the docker container
     sed -i 's/#   StrictHostKeyChecking .*/    StrictHostKeyChecking no/' /etc/ssh/ssh_config

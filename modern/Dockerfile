@@ -5,9 +5,12 @@ FROM openjdk:8-jre-alpine@sha256:b2ad93b079b1495488cc01375de799c402d45086015a120
 # py3-paramiko and py3-cffi is for docker compose installed later
 # see https://github.com/docker/compose/issues/6617#issuecomment-478662098
 RUN apk add --no-cache \
+             bash \
              ca-certificates \
              curl \
              git \
+             make \
+             jq \
              openssh-client \
              openssl \
              py3-pip \
@@ -15,7 +18,11 @@ RUN apk add --no-cache \
              py3-cffi \
              su-exec \
              tar \
-    && pip3 install awscli
+             zip \
+    && pip3 install awscli \
+    \
+    # Make bash default shell
+    && ln -sf /bin/bash /bin/sh
 
 # install Docker client and Docker Compose
 RUN set -eux; \
