@@ -1,4 +1,4 @@
-FROM docker:19-dind@sha256:8dc06331f47db3516abf66c644a3e1d6340307dc2161fe8476648d1c95cb1446
+FROM docker:19-dind@sha256:61d1e32a4d419a79e047feed2388af2e557661ea0491b3f6408b2c90e007c5a5
 
 # py3-paramiko and py3-cffi is for docker compose installed later
 # see https://github.com/docker/compose/issues/6617#issuecomment-478662098
