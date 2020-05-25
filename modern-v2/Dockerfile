@@ -41,9 +41,7 @@ ENV DOCKER_HOST=unix:///var/run/docker.sock
 ENV JENKINS_SWARM_VERSION 3.12
 
 RUN set -eux; \
-    addgroup jenkins; \
-    adduser -D -u 1000 -G jenkins jenkins; \
-    addgroup jenkins docker; \
+    adduser -D -u 1000 -G docker jenkins; \
     chown -R jenkins /home/jenkins; \
     curl --create-dirs -sSLo \
       /usr/share/jenkins/swarm-client-$JENKINS_SWARM_VERSION.jar \
