@@ -84,7 +84,5 @@ RUN set -eux; \
 # Ensure JVM uses cgroups for memory limits due to running as a container
 ENV JAVA_TOOL_OPTIONS "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dsun.zip.disableMemoryMapping=true"
 
-VOLUME ["/home/jenkins/"]
-
 ADD container/entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

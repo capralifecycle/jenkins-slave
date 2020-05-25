@@ -65,6 +65,7 @@ docker run \
   -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI \
   -e ECS_CONTAINER_METADATA_URI \
   -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /home/jenkins:/home/jenkins \
   -v $passfile:$passfile \
   $image \
     -disableSslVerification \

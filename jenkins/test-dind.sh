@@ -17,3 +17,11 @@ done
 
 # Spawn hello world container
 docker run --rm hello-world
+
+docker_gid=$(stat -c %g /docker.sock)
+echo "Docker socket group: $docker_gid"
+
+if [ "$docker_gid" != "1000" ]; then
+  echo "ERROR: GID was expected to be 1000 (same as jenkins group in slave)"
+  exit 1
+fi

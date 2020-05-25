@@ -52,8 +52,6 @@ RUN set -eux; \
 # Ensure JVM uses cgroups for memory limits due to running as a container
 ENV JAVA_TOOL_OPTIONS "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dsun.zip.disableMemoryMapping=true"
 
-VOLUME ["/home/jenkins/"]
-
 COPY wrapper/container/* /
 COPY modern-v2/run-jenkins-slave.sh /
 

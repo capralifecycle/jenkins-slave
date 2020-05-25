@@ -13,7 +13,9 @@ RUN apk add -Uuv \
       py2-pip \
       supervisor \
     && pip install awscli \
-    && addgroup docker
+    && addgroup docker \
+    && mkdir /home/jenkins \
+    && chown 1000:1000 /home/jenkins
 
 # Set DOCKER_HOST so that it will not be dependent on what happens in the
 # docker own entrypoint script.

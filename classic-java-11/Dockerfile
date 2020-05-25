@@ -100,7 +100,5 @@ ENV MAVEN_CONFIG "/home/jenkins/.m2"
 # TODO: Unsure if this should remain enabled in JVM 11
 # ENV JAVA_TOOL_OPTIONS "-Dsun.zip.disableMemoryMapping=true"
 
-VOLUME ["/home/jenkins/"]
-
 ADD container/entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
