@@ -19,6 +19,7 @@ RUN apk add --no-cache \
              py3-cffi \
              su-exec \
              tar \
+             zip \
     && pip3 install awscli \
     \
     # Make bash default shell
