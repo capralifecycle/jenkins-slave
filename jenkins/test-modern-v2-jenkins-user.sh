@@ -13,3 +13,10 @@ if [ "$user_gid" != "$docker_gid" ]; then
   echo "ERROR: User GID and docker GID not same"
   exit 1
 fi
+
+if [ "$docker_gid" != "1000" ]; then
+  echo "ERROR: Expected GID to be 1000"
+  exit 1
+fi
+
+./jenkins/test-slave-expectations.sh
