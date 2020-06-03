@@ -10,7 +10,7 @@ FROM docker:19-dind@sha256:05ab93f3b335c087411ceda32e078759eb69f2cdc1b2786aad315
 
 RUN apk add -Uuv \
       jq \
-      py2-pip \
+      py3-pip \
       supervisor \
     && pip install awscli \
     && addgroup docker \
