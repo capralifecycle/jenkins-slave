@@ -19,10 +19,11 @@ while true; do
   # Remove all unused networks.
   docker network prune --force --filter until=1h
 
-  # Remove images created for more than 1,5 day ago.
+  # Remove images created for more than X hours ago.
   # The time limit is an attempt to keep some images in
   # cache over a longer time.
-  docker image prune --force --all --filter until=36h
+  # TODO: Increase this in later setup. See CALS-294 for background.
+  docker image prune --force --all --filter until=18h
 
   echo "Cleanup complete"
   date
