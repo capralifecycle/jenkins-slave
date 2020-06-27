@@ -33,20 +33,6 @@ buildConfig([
     'modern': {
       buildWrappedSlave('modern', 'latest')
     },
-    'modern-v2': {
-      buildDockerImage(
-        "923402097046.dkr.ecr.eu-central-1.amazonaws.com/buildtools/service/jenkins-slave",
-        "modern-v2",
-        null,
-        "./modern-v2/Dockerfile"
-      ) { img ->
-        stage('Test image') {
-          img.inside('--privileged --user root') {
-            sh 'IS_TEST=1 ./jenkins/test-modern-v2.sh'
-          }
-        }
-      }
-    },
     'classic': {
       buildWrappedSlave('classic')
     },
