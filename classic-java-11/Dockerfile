@@ -39,7 +39,7 @@ RUN set -eux; \
 # inspiration: https://github.com/carlossg/jenkins-swarm-slave-docker/blob/master/Dockerfile
 # see https://wiki.jenkins-ci.org/display/JENKINS/Swarm+Plugin
 # renovate: datasource=github-releases depName=jenkinsci/swarm-plugin versioning=regex:^swarm-plugin-(?<major>\d+)\.(?<minor>\d+)(?:\.(?<patch>\d+))?$
-ENV JENKINS_SWARM_TAG_VERSION=swarm-plugin-3.12
+ENV JENKINS_SWARM_TAG_VERSION=swarm-plugin-3.22
 
 RUN set -eux; \
     JENKINS_SWARM_VERSION=${JENKINS_SWARM_TAG_VERSION##*-}; \
