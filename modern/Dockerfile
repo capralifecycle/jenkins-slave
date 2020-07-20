@@ -1,6 +1,6 @@
 # inspiration:
 # - https://github.com/jenkinsci/docker-workflow-plugin/tree/master/demo
-FROM openjdk:8-jre-alpine@sha256:b2ad93b079b1495488cc01375de799c402d45086015a120c105ea00e1be0fd52
+FROM azul/zulu-openjdk-alpine:11-jre@sha256:e635665fad23f7c145f058047f5409c04a88d0acffb3b685a25b61bfa005cf1c
 
 # py3-paramiko and py3-cffi is for docker compose installed later
 # see https://github.com/docker/compose/issues/6617#issuecomment-478662098
@@ -48,9 +48,6 @@ RUN JENKINS_SWARM_VERSION=${JENKINS_SWARM_TAG_VERSION##*-} \
           /usr/share/jenkins/swarm-client-$JENKINS_SWARM_VERSION.jar \
           https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/$JENKINS_SWARM_VERSION/swarm-client-$JENKINS_SWARM_VERSION.jar \
     && chmod 755 /usr/share/jenkins
-
-# Ensure JVM uses cgroups for memory limits due to running as a container
-ENV JAVA_TOOL_OPTIONS "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dsun.zip.disableMemoryMapping=true"
 
 ADD container/entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
