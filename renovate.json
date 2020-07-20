@@ -3,5 +3,13 @@
     "github>capraconsulting/renovate-config:default"
   ],
   "automerge": true,
-  "automergeType": "branch"
+  "automergeType": "branch",
+  "regexManagers": [
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=(?<currentValue>.*)\\s"
+      ]
+    }
+  ]
 }
