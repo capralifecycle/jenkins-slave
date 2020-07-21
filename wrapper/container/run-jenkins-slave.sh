@@ -60,7 +60,6 @@ docker pull $image
 
 # Run the slave
 docker run \
-  -e MESOS_TASK_ID="$(hostname)" \
   -e JAVA_OPTS="$JAVA_OPTS" \
   -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI \
   -e ECS_CONTAINER_METADATA_URI \
@@ -69,9 +68,10 @@ docker run \
   -v $passfile:$passfile \
   $image \
     -disableSslVerification \
+    -disableClientsUniqueId \
     -master "http://jenkins-internal.capra.tv" \
     -labels "$SLAVE_LABELS" \
     -username "$USER" \
     -passwordFile "$passfile" \
-    -name "$tag" \
+    -name "$tag-$(hostname)" \
     -executors "${SLAVE_EXECUTORS:-1}"
