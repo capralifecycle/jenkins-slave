@@ -65,8 +65,6 @@ RUN set -eux; \
         maven \
         npm \
         nodejs \
-        py2-pip \
-        python \
         supervisor \
         ttf-dejavu \
         # xmlstarlet is used to extract data from pom.xml
