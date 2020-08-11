@@ -1,6 +1,6 @@
 # inspiration:
 # - https://github.com/jenkinsci/docker-workflow-plugin/tree/master/demo
-FROM azul/zulu-openjdk-alpine:8@sha256:509d1c1dc4fde769424c3a779cdc33b66077a04dc8abebbbd22279b0edc3f95b
+FROM azul/zulu-openjdk-alpine:8@sha256:f9233d12dd9371ecdf09eb970492dcbf630a5245a96dd646ac36d5c0f1915c18
 
 # py3-paramiko and py3-cffi is for docker compose installed later
 # see https://github.com/docker/compose/issues/6617#issuecomment-478662098
@@ -65,8 +65,6 @@ RUN set -eux; \
         maven \
         npm \
         nodejs \
-        py2-pip \
-        python \
         supervisor \
         ttf-dejavu \
         # xmlstarlet is used to extract data from pom.xml
