@@ -9,7 +9,9 @@
 FROM docker:19-dind@sha256:8dded163e463f4a59bf305b3dca98e312b2cfb89a43da3872e48f95a7554c48f
 
 RUN apk add -Uuv \
+      bash \
       jq \
+      procps \
       py3-pip \
       supervisor \
     && pip install awscli \
