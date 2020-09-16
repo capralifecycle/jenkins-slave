@@ -47,6 +47,10 @@ tag=${SLAVE_VERSION:-latest}
 image=923402097046.dkr.ecr.eu-central-1.amazonaws.com/buildtools/service/jenkins-slave:$tag
 docker pull $image
 
+# Support adding a suffix for easier identifying
+# different slaves using same tag.
+name_suffix=${SLAVE_NAME_SUFFIX:-}
+
 # Schedule a deletion of the password after giving the
 # slave time to pick it up. This reduces the possibility that a
 # job can extract the password. Using a file to transport the
@@ -73,5 +77,5 @@ docker run \
     -labels "$SLAVE_LABELS" \
     -username "$USER" \
     -passwordFile "$passfile" \
-    -name "$tag-$(hostname)" \
+    -name "$tag-$(hostname)$name_suffix" \
     -executors "${SLAVE_EXECUTORS:-1}"
