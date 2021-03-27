@@ -2,8 +2,8 @@
 set -eu
 
 while true; do
-  # Run every 6 hour.
-  sleep 21600
+  # Run every hour.
+  sleep 3600
   date
   echo "Running cleanup script"
 
