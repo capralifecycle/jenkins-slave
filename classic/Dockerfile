@@ -62,7 +62,6 @@ RUN set -eux; \
         groff \
         iptables \
         less \
-        maven \
         npm \
         nodejs \
         supervisor \
@@ -81,6 +80,20 @@ RUN set -eux; \
     \
     # Dont check host keys when connecting with ssh (Git) from the docker container
     sed -i 's/#   StrictHostKeyChecking .*/    StrictHostKeyChecking no/' /etc/ssh/ssh_config
+
+RUN set -eux; \
+    wget https://raw.githubusercontent.com/capralifecycle/buildtools-snippets/master/tools/maven-3/install.sh -O /tmp/script.sh; \
+    sh /tmp/script.sh; \
+    rm /tmp/script.sh; \
+    mvn -version; \
+    # Make Maven available on same path as in normal classic slave, and
+    # the path that Jenkins expect.
+    mkdir -p /usr/share/java; \
+    ln -s /usr/share/maven /usr/share/java/maven-3; \
+    test -x /usr/share/java/maven-3/bin/mvn
+
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG "/home/jenkins/.m2"
 
 # Ensure JVM uses cgroups for memory limits due to running as a container
 ENV JAVA_TOOL_OPTIONS "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -Dsun.zip.disableMemoryMapping=true"
