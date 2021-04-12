@@ -106,7 +106,7 @@ def buildDockerImage(
         args = " --no-cache"
       }
 
-      img = docker.build("$dockerImageName:$tagName", "--cache-from $lastImageId$args --pull -f $dockerfile .")
+      img = docker.build("$dockerImageName:$tagName", "--cache-from $lastImageId$args -f $dockerfile .")
     }
 
     testImage(img)
