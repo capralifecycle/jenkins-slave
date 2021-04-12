@@ -5,7 +5,7 @@ set -eux
 for model in modern classic classic-java-11; do
   echo "Testing $model"
 
-  docker build --pull -t jenkins-slave-$model -f ./$model/Dockerfile .
+  docker build -t jenkins-slave-$model -f ./$model/Dockerfile .
   docker run \
     --rm \
     -it \

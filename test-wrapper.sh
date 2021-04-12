@@ -2,7 +2,7 @@
 # Build and test similar to in CI
 set -eux
 
-docker build --pull -t jenkins-slave-wrapper -f ./wrapper/Dockerfile .
+docker build -t jenkins-slave-wrapper -f ./wrapper/Dockerfile .
 docker run \
   --rm \
   -it \
