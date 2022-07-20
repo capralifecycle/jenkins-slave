@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:11@sha256:a68be938e0266a089dcae3808825ca90c3bbae7a1ae6999252d1d7d8b4d8c0cc
+FROM azul/zulu-openjdk-alpine:11@sha256:f422198079e73c741f99823aa4e70a0482aac0174980e4cc2c84de17d79efd1d
 
 # py3-paramiko and py3-cffi is for docker compose installed later
 # see https://github.com/docker/compose/issues/6617#issuecomment-478662098
