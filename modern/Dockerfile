@@ -31,8 +31,15 @@ RUN set -eux; \
     rm /tmp/script.sh; \
     docker --version; \
     \
-    # install docker compose
-    pip3 install docker-compose
+    # install docker compose v2
+    # renovate: datasource=github-releases depName=docker/compose extractVersion=v(?<version>.*)$
+    DOCKER_COMPOSE_VERSION="2.20.0"; \
+    DOCKER_CLI_PLUGIN_PATH=/usr/local/lib/docker/cli-plugins; \
+    mkdir -p "$DOCKER_CLI_PLUGIN_PATH"; \
+    curl -L "https://github.com/docker/compose/releases/download/v$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o "$DOCKER_CLI_PLUGIN_PATH/docker-compose"; \
+    chmod +x "$DOCKER_CLI_PLUGIN_PATH/docker-compose"; \
+    ln -s  "$DOCKER_CLI_PLUGIN_PATH/docker-compose" /usr/local/bin/docker-compose; \
+    docker-compose --version
 
 # install Jenkins slave
 # inspiration: https://github.com/carlossg/jenkins-swarm-slave-docker/blob/master/Dockerfile
