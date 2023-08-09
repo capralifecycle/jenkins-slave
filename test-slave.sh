@@ -2,7 +2,7 @@
 # Build and test similar to in CI
 set -eux
 
-for model in modern classic classic-java-11; do
+for model in modern classic-java-11; do
   echo "Testing $model"
 
   docker build -t jenkins-slave-$model -f ./$model/Dockerfile .

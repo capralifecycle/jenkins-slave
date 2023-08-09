@@ -21,9 +21,6 @@ spinn up the slave itself as one of its containers.
 * *Modern slave*: Thin slave supposed to only have Docker. Builds use Docker
   to provide a self-defined build context and tooling.
 
-* *Classic slave*: Thick slave supporting classic freestyle jobs that do not
-  use Docker to provide tooling. Contains JDK, node and more tooling.
-
 * *Classic slave for Java 11*: Thick slave supporting classic freestyle jobs
   for Java 11. Contains JDK, node and more tooling. This is considered only
   temporary until either the two classic slaves are merged or we have switch

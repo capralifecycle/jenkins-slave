@@ -1,6 +1,6 @@
 # inspiration:
 # - https://github.com/jenkinsci/docker-workflow-plugin/tree/master/demo
-FROM azul/zulu-openjdk-alpine:11-jre@sha256:01af97e994d94f558e309f679b5f21734b888b8a8e21a6174a4407e1ec1d7bb3
+FROM azul/zulu-openjdk-alpine:11-jre@sha256:3ae28cc82ab4660a95be03e7d201c5aa1525d3fe4b636c3fd5e8f385a5ac3239
 
 # py3-paramiko and py3-cffi is for docker compose installed later
 # see https://github.com/docker/compose/issues/6617#issuecomment-478662098
@@ -31,8 +31,15 @@ RUN set -eux; \
     rm /tmp/script.sh; \
     docker --version; \
     \
-    # install docker compose
-    pip3 install docker-compose
+    # install docker compose v2
+    # renovate: datasource=github-releases depName=docker/compose extractVersion=v(?<version>.*)$
+    DOCKER_COMPOSE_VERSION="2.20.0"; \
+    DOCKER_CLI_PLUGIN_PATH=/usr/local/lib/docker/cli-plugins; \
+    mkdir -p "$DOCKER_CLI_PLUGIN_PATH"; \
+    curl -L "https://github.com/docker/compose/releases/download/v$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o "$DOCKER_CLI_PLUGIN_PATH/docker-compose"; \
+    chmod +x "$DOCKER_CLI_PLUGIN_PATH/docker-compose"; \
+    ln -s  "$DOCKER_CLI_PLUGIN_PATH/docker-compose" /usr/local/bin/docker-compose; \
+    docker-compose --version
 
 # install Jenkins slave
 # inspiration: https://github.com/carlossg/jenkins-swarm-slave-docker/blob/master/Dockerfile
