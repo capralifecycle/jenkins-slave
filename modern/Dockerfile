@@ -1,6 +1,6 @@
 # inspiration:
 # - https://github.com/jenkinsci/docker-workflow-plugin/tree/master/demo
-FROM azul/zulu-openjdk-alpine:11-jre@sha256:7f7e5c60de6cc7c6a43ee59aee22ddbe8b47001af4415437078ecafbd93f123b
+FROM azul/zulu-openjdk-alpine:11-jre@sha256:7f389b373b559739c9720a61629a9252a3ad296509778cc77ba2d05c6e63ceb9
 
 # py3-paramiko and py3-cffi is for docker compose installed later
 # see https://github.com/docker/compose/issues/6617#issuecomment-478662098
