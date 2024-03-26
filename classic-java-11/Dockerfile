@@ -26,7 +26,7 @@ RUN set -eux; \
     ln -sf /bin/bash /bin/sh
 
 # renovate: datasource=github-releases depName=docker/compose extractVersion=v(?<version>.*)$
-ENV DOCKER_COMPOSE_VERSION=2.25.0
+ENV DOCKER_COMPOSE_VERSION=2.26.0
 # install Docker client and Docker Compose
 RUN set -eux; \
     wget https://raw.githubusercontent.com/capralifecycle/buildtools-snippets/master/tools/docker/install.sh -O /tmp/script.sh; \
